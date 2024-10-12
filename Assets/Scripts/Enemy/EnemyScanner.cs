@@ -20,5 +20,5 @@ public class EnemyScanner : MonoBehaviour
         {
             LostPlayer?.Invoke();
         }
-    }
+    } 
 }

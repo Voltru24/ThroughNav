@@ -5,31 +5,15 @@ public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private int _forceAttack = 1;
     [SerializeField] private float _speedAttack = 2f;
+    [SerializeField] private float _sphereCastRadius;
+    [SerializeField] private float _spherCastDistance;
 
-    private List<Enemy> _enemies = new List<Enemy>();
     private bool isAttackTimer = false;
+    private Transform _transform;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Awake()
     {
-        if (collision.GetComponent<Enemy>())
-        {
-            Enemy enemy = collision.GetComponent<Enemy>();
-
-            if(_enemies.Contains(enemy))
-            {
-                return;
-            }
-
-            _enemies.Add(enemy);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.GetComponent<Enemy>())
-        {
-            _enemies.Remove(collision.GetComponent<Enemy>());
-        }
+        _transform = transform;
     }
 
     private void Update()
@@ -50,14 +34,50 @@ public class PlayerAttack : MonoBehaviour
 
     private void Attack()
     {
-        foreach (Enemy enemy in _enemies)
+        Vector2 direction;
+
+        if (_transform.rotation.y == 0)
         {
-            enemy.TakeDamage(_forceAttack, transform, 10);
+            direction = Vector2.right;
+        }
+        else
+        {
+            direction = Vector2.left;
+        }
+
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(_transform.position, _sphereCastRadius, direction, _spherCastDistance);
+
+        Debug.Log(hits.Length);
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.collider.TryGetComponent(out Enemy enemy))
+            {
+                enemy.TakeDamage(_forceAttack, _transform, 10);
+            }
         }
     }
 
     private void AttackTimer()
     {
         isAttackTimer = false;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+
+        Vector3 direction;
+
+        if (transform.rotation.y == 0)
+        {
+            direction = Vector2.right;
+        }
+        else
+        {
+            direction = Vector2.left;
+        }
+
+        Gizmos.DrawSphere(transform.position + direction * _spherCastDistance , _sphereCastRadius);
     }
 }

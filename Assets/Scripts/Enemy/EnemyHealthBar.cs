@@ -50,6 +50,11 @@ public class EnemyHealthBar : MonoBehaviour
 
     private void Show()
     {
+        if (_enemy.Health <= 0)
+        {
+            Destroy(gameObject);
+        }
+
         _slider.maxValue = _enemy.MaxHealth;
         _slider.value = _enemy.Health;
     }

@@ -10,14 +10,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int _damage;
 
     [SerializeField] private EnemyScanner _scanner;
-    [SerializeField] private EnemyHealthBar _healthBar;
 
     private EnemyMovement _movement;
     private Transform _target;
     private Rigidbody2D _rigidbody;
 
     public event Action ChangeHealth;
-
+    public event Action Die;
 
     public int Health => _health;
     public int MaxHealth => _maxHealth;
@@ -28,14 +27,6 @@ public class Enemy : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _movement = GetComponent<EnemyMovement>();
-    }
-
-    private void Start()
-    {
-        if (_healthBar != null)
-        {
-            _healthBar.SetEnemy(this);
-        }
     }
 
     private void OnEnable()
@@ -78,7 +69,6 @@ public class Enemy : MonoBehaviour
 
     public void Kill()
     {
-        Destroy(_healthBar.gameObject);
         Destroy(gameObject);
     }
 
