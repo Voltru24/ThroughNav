@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -10,6 +11,10 @@ public class PlayerMovement : MonoBehaviour
     private Animator _animator;
     private Transform _transform;
 
+    private Vector2 _direction;
+
+    public event Action<Vector2> ChangePosition;
+
     private void Start()
     {
         _rigidbody2d = GetComponent<Rigidbody2D>();
@@ -20,6 +25,12 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         Move();
+        ChangePosition?.Invoke(_rigidbody2d.position);
+    }
+
+    private void FixedUpdate()
+    {
+        _rigidbody2d.AddForce(_direction);
     }
 
     private void Move()
@@ -27,19 +38,18 @@ public class PlayerMovement : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        if (horizontal != 0 || vertical != 0) 
+        if (horizontal != 0 || vertical != 0)
         {
             _animator.SetBool(PlayerAnimatorData.Params.isRun, true);
 
             Rotate(horizontal);
-
-            _rigidbody2d.AddForce(_moveSpeed * Vector2.right * horizontal);
-            _rigidbody2d.AddForce(_moveSpeed * Vector2.up * vertical);
         }
         else
         {
             _animator.SetBool(PlayerAnimatorData.Params.isRun, false);
         }
+
+        _direction = (_moveSpeed * Vector2.right * horizontal) + (_moveSpeed * Vector2.up * vertical);
     }
 
     private void Rotate(float horizontal) 

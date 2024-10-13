@@ -1,10 +1,12 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
+public class EnemyAttack : MonoBehaviour
 {
     [SerializeField] private int _forceAttack = 1;
     [SerializeField] private float _speedAttack = 2f;
+    [SerializeField] private float _speedSwing = 0.5f;
     [SerializeField] private float _sphereCastRadius;
     [SerializeField] private float _spherCastDistance;
 
@@ -32,7 +34,15 @@ public class PlayerAttack : MonoBehaviour
     }
 
 
-    private void Attack()
+    public void Attack()
+    {
+        if (isAttackTimer == false)
+        {
+            Invoke(nameof(Swing), _speedSwing);
+        }
+    }
+    
+    private void Swing()
     {
         Vector2 direction;
 
@@ -49,11 +59,15 @@ public class PlayerAttack : MonoBehaviour
 
         foreach (RaycastHit2D hit in hits)
         {
-            if (hit.collider.TryGetComponent(out Enemy enemy))
+            if (hit.collider.TryGetComponent(out Player player))
             {
-                enemy.TakeDamage(_forceAttack, _transform, 10);
+                player.TakeDamage(_forceAttack);
             }
         }
+
+        Invoke(nameof(AttackTimer), _speedAttack);
+
+        isAttackTimer = true;
     }
 
     private void AttackTimer()
@@ -76,6 +90,6 @@ public class PlayerAttack : MonoBehaviour
             direction = Vector2.left;
         }
 
-        Gizmos.DrawSphere(transform.position + direction * _spherCastDistance , _sphereCastRadius);
+        Gizmos.DrawSphere(transform.position + direction * _spherCastDistance, _sphereCastRadius);
     }
 }

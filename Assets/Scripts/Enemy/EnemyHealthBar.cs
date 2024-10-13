@@ -19,30 +19,13 @@ public class EnemyHealthBar : MonoBehaviour
         _slider = GetComponent<Slider>();
     }
 
-    private void OnEnable()
-    {
-        if (_enemy != null)
-        {
-            _enemy.Movement.ChangePosition += ChangePosition;
-            _enemy.ChangeHealth += Show;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (_enemy != null)
-        {
-            _enemy.Movement.ChangePosition -= ChangePosition;
-            _enemy.ChangeHealth -= Show;
-        }
-    }
-
     public void SetEnemy(Enemy enemy)
     {
         _enemy = enemy;
 
         _enemy.Movement.ChangePosition += ChangePosition;
         _enemy.ChangeHealth += Show;
+        _enemy.Die += Hide;
 
         ChangePosition(_enemy.gameObject.transform.position);
         Show();
@@ -50,13 +33,13 @@ public class EnemyHealthBar : MonoBehaviour
 
     private void Show()
     {
-        if (_enemy.Health <= 0)
-        {
-            Destroy(gameObject);
-        }
-
         _slider.maxValue = _enemy.MaxHealth;
         _slider.value = _enemy.Health;
+    }
+
+    private void Hide(Enemy _)
+    {
+        Destroy(gameObject);
     }
 
     private void ChangePosition(Vector2 position)

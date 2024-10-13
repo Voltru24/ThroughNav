@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5431400188305809358}
   - component: {fileID: 3262785481008523506}
   - component: {fileID: 8059134650896655647}
+  - component: {fileID: 1581611927707776776}
   m_Layer: 0
   m_Name: Mushroom
   m_TagString: Untagged
@@ -49,9 +50,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 5
-  m_AngularDrag: 0.05
+  m_Mass: 0.94
+  m_LinearDrag: 0.74
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -76,7 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8f1e261d37d5e4480d57a7824c0b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 2
+  _moveSpeed: 1
 --- !u!61 &3262785481008523506
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -134,11 +135,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a4bd6090357cb46aa9c2d74c7f8550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 10
-  _health: 10
-  _damage: 0
+  _maxHealth: 3
+  _health: 3
+  _damage: 2
   _scanner: {fileID: 7543778793512012661}
-  _healthBar: {fileID: 0}
+  _attack: {fileID: 0}
+--- !u!114 &1581611927707776776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720221441627122390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aed301c4d90d247428f3776aed4c3e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _forceAttack: 1
+  _speedAttack: 2
+  _speedSwing: 0.5
+  _sphereCastRadius: 0.65
+  _spherCastDistance: 0.11
 --- !u!1 &2277543322583878060
 GameObject:
   m_ObjectHideFlags: 0

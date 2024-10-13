@@ -3,6 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(EnemyMovement))]
+[RequireComponent(typeof(EnemyAttack))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private int _maxHealth;
@@ -10,13 +11,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int _damage;
 
     [SerializeField] private EnemyScanner _scanner;
+    [SerializeField] private EnemyAttack _attack;
 
     private EnemyMovement _movement;
     private Transform _target;
     private Rigidbody2D _rigidbody;
 
     public event Action ChangeHealth;
-    public event Action Die;
+    public event Action<Enemy> Die;
 
     public int Health => _health;
     public int MaxHealth => _maxHealth;
@@ -27,17 +29,20 @@ public class Enemy : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _movement = GetComponent<EnemyMovement>();
+        _attack = GetComponent<EnemyAttack>();
     }
 
     private void OnEnable()
     {
         _scanner.LostPlayer += Run;
+        _scanner.LostPlayer += _attack.Attack;
         _scanner.FoundPlayer += _movement.Stop;
     }
 
     private void OnDisable()
     {
         _scanner.LostPlayer -= Run;
+        _scanner.LostPlayer -= _attack.Attack;
         _scanner.FoundPlayer -= _movement.Stop;
     }
 
@@ -66,9 +71,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
     public void Kill()
     {
+        Die?.Invoke(this);
         Destroy(gameObject);
     }
 

@@ -13,6 +13,11 @@ public class Decorator : MonoBehaviour
 
         foreach (Transform point in _points)
         {
+            for (int i = 0; i < point.childCount; i++)
+            {
+                Destroy(point.GetChild(i).gameObject);
+            }
+
             index = Random.Range(indexVoid, _decors.Count);
 
             if (index != indexVoid)
